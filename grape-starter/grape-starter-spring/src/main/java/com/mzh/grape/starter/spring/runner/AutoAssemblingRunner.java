@@ -8,6 +8,7 @@ import com.mzh.grape.domain.annotation.State;
 import com.mzh.grape.domain.annotation.Transition;
 import com.mzh.grape.domain.model.*;
 import com.mzh.grape.starter.spring.holder.StateMachineHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,16 +26,15 @@ import java.util.stream.Collectors;
  * @author zhihao.mao
  */
 
+@Slf4j
 public class AutoAssemblingRunner implements ApplicationRunner {
 
+    @Autowired
     private StateMachineHolder stateMachineHolder;
-
-    public void setStateMachineHolder(@Autowired StateMachineHolder stateMachineHolder) {
-        this.stateMachineHolder = stateMachineHolder;
-    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        log.info("开始组装状态机");
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
 
         List<IState> stateList = applicationContext
@@ -45,6 +45,7 @@ public class AutoAssemblingRunner implements ApplicationRunner {
                 .map(o -> (IState) o)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(stateList)) {
+            log.warn("停止组装状态机: 不存在可用状态");
             return;
         }
 
@@ -56,6 +57,7 @@ public class AutoAssemblingRunner implements ApplicationRunner {
                 .map(o -> (ITransition) o)
                 .collect(Collectors.toList());
         if (CollectionUtils.isEmpty(transitionList)) {
+            log.warn("停止组装状态机: 不存在可用转换");
             return;
         }
 
@@ -169,9 +171,11 @@ public class AutoAssemblingRunner implements ApplicationRunner {
                         }
                     };
 
-                    stateMachineHolder.put(stateMachineId, abstractStateMachine);
+                    stateMachineHolder.put(abstractStateMachine, Boolean.FALSE);
                     SpringUtil.registerBean(stateMachineId, abstractStateMachine);
+                    log.info("组装状态机成功: {}", stateMachineId);
                 });
+        log.info("全部状态机组装完毕");
     }
 
 
