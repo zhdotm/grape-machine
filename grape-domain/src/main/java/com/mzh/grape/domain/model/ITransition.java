@@ -97,10 +97,9 @@ public interface ITransition {
     /**
      * 获取下个状态
      *
-     * @param state 旧状态
      * @return 新状态
      */
-    IState getNextState(IState state);
+    IState getNextState();
 
     /**
      * 转换
@@ -115,7 +114,7 @@ public interface ITransition {
         Boolean invokeIsSuccess = action.invoke(args);
         Assert.isTrue(invokeIsSuccess, "transition[%s]执行失败: action[%s]执行失败", getTransitionId(), action.getActionId());
 
-        return transitionType == TransitionTypeEnum.EXTERNAL ? getNextState(state) : state;
+        return transitionType == TransitionTypeEnum.EXTERNAL ? getNextState() : state;
     }
 
 }
