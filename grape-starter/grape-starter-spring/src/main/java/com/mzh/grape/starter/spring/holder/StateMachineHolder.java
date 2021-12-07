@@ -1,11 +1,13 @@
 package com.mzh.grape.starter.spring.holder;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.map.MapUtil;
 import com.mzh.grape.domain.model.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -110,20 +112,26 @@ public class StateMachineHolder {
 
         if (isNeedRegisterStateMachineComponent) {
             //添加状态机组件
-            stateMachine.getStates().forEach(state -> {
-                //添加状态
-                put(stateMachineId, state);
-                stateMachine.getTransition(state).forEach(transition -> {
-                    //添加转换
-                    put(stateMachineId, transition);
-                    //添加条件
-                    ICondition condition = transition.getCondition();
-                    put(stateMachineId, condition);
-                    //添加动作
-                    IAction action = transition.getAction();
-                    put(stateMachineId, action);
+            Collection<IState> states = stateMachine.getStates();
+            if (CollectionUtil.isNotEmpty(states)) {
+                states.forEach(state -> {
+                    //添加状态
+                    put(stateMachineId, state);
+                    Collection<ITransition> transitions = stateMachine.getTransition(state);
+                    if (CollectionUtil.isNotEmpty(transitions)) {
+                        transitions.forEach(transition -> {
+                            //添加转换
+                            put(stateMachineId, transition);
+                            //添加条件
+                            ICondition condition = transition.getCondition();
+                            put(stateMachineId, condition);
+                            //添加动作
+                            IAction action = transition.getAction();
+                            put(stateMachineId, action);
+                        });
+                    }
                 });
-            });
+            }
         }
 
         //添加状态机
