@@ -111,6 +111,13 @@ public interface ITransition {
     IAction getAction();
 
     /**
+     * 获取当前状态
+     *
+     * @return 触发转换的状态
+     */
+    IState getCurrentState();
+
+    /**
      * 获取下个状态
      *
      * @return 新状态
@@ -120,17 +127,16 @@ public interface ITransition {
     /**
      * 转换
      *
-     * @param state 当前状态
-     * @param args  动作参数
+     * @param args 动作参数
      * @return 下个状态
      */
-    default IState transfer(IState state, Object... args) {
+    default IState transfer(Object... args) {
         TransitionTypeEnum transitionType = getTransitionType();
         IAction action = getAction();
         Boolean invokeIsSuccess = action.invoke(args);
-        Assert.isTrue(invokeIsSuccess, "transition[%s]执行失败: action[%s]执行失败", getTransitionId(), action.getActionId());
+        Assert.isTrue(invokeIsSuccess, "transition[{}]执行失败: action[{}]执行失败", getTransitionId(), action.getActionId());
 
-        return transitionType == TransitionTypeEnum.EXTERNAL ? getNextState() : state;
+        return transitionType == TransitionTypeEnum.EXTERNAL ? getNextState() : getCurrentState();
     }
 
 }

@@ -10,9 +10,7 @@ import com.mzh.grape.domain.model.IState;
 import com.mzh.grape.domain.model.IStateMachine;
 import com.mzh.grape.domain.model.ITransition;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,13 +39,37 @@ public interface IStateMachineSupport {
     /**
      * 构建状态机
      *
-     * @param stateMachineId         状态机ID
-     * @param stateTransitionListMap 状态转换映射
+     * @param stateMachineId 状态机ID
+     * @param transition     状态机内所有状态转换
      * @return 状态机
      */
-    default IStateMachine build(String stateMachineId, Map<IState, List<ITransition>> stateTransitionListMap) {
+    default IStateMachine build(String stateMachineId, ITransition transition) {
 
-        List<IState> stateList = ListUtil.toList(stateTransitionListMap.keySet());
+        return build(stateMachineId, ListUtil.of(transition));
+    }
+
+    /**
+     * 构建状态机
+     *
+     * @param stateMachineId    状态机ID
+     * @param allTransitionList 状态机内所有状态转换
+     * @return 状态机
+     */
+    default IStateMachine build(String stateMachineId, List<ITransition> allTransitionList) {
+        Map<IState, List<ITransition>> stateTransitionListMap = allTransitionList.stream().collect(Collectors.groupingBy(ITransition::getCurrentState));
+        Set<IState> stateSet = new HashSet<>(stateTransitionListMap.keySet());
+        Set<String> stateIdSet = stateSet.stream().map(IState::getStateId).collect(Collectors.toSet());
+        stateTransitionListMap.values().forEach(transitionList -> {
+            transitionList.forEach(transition -> {
+                IState nextState = transition.getNextState();
+                if (ObjectUtil.isNotEmpty(nextState)) {
+                    if (stateIdSet.add(nextState.getStateId())) {
+                        stateSet.add(nextState);
+                    }
+                }
+            });
+        });
+        List<IState> stateList = ListUtil.toList(stateSet);
         Map<String, IState> stateIdStateMap = stateList
                 .stream()
                 .collect(Collectors.toMap(IState::getStateId, iState -> iState));
@@ -100,12 +122,12 @@ public interface IStateMachineSupport {
         if (ObjectUtil.isEmpty(transition)) {
             return Boolean.FALSE;
         }
-        Assert.isTrue(StrUtil.isNotBlank(transition.getTransitionId()), "检查转换完整性失败: 转换ID为空, transition[%s]", transition.toString());
-        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getTransitionType()), "检查转换完整性失败: 转换类型为空, transition[%s]", transition.toString());
-        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getCondition()), "检查转换完整性失败: 转换条件为空, transition[%s]", transition.toString());
-        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getAction()), "检查转换完整性失败: 转换动作为空, transition[%s]", transition.toString());
-        Assert.isTrue(!(ObjectUtil.isEmpty(transition.getNextState()) && (TransitionTypeEnum.EXTERNAL == transition.getTransitionType())), "检查转换完整性失败: 外部转换类型不能没有下个转换状态, transition[%s]", transition.toString());
-        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getSortId()), "检查转换完整性失败: 转换排序为空, transition[%s]", transition.toString());
+        Assert.isTrue(StrUtil.isNotBlank(transition.getTransitionId()), "检查转换完整性失败: 转换ID为空, transition[{}]", transition.toString());
+        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getTransitionType()), "检查转换完整性失败: 转换类型为空, transition[{}]", transition.toString());
+        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getCondition()), "检查转换完整性失败: 转换条件为空, transition[{}]", transition.toString());
+        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getAction()), "检查转换完整性失败: 转换动作为空, transition[{}]", transition.toString());
+        Assert.isTrue(!(ObjectUtil.isEmpty(transition.getNextState()) && (TransitionTypeEnum.EXTERNAL == transition.getTransitionType())), "检查转换完整性失败: 外部转换类型不能没有下个转换状态, transition[{}]", transition.toString());
+        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getSortId()), "检查转换完整性失败: 转换排序为空, transition[{}]", transition.toString());
 
         return Boolean.TRUE;
     }

@@ -1,5 +1,6 @@
 package com.mzh.grape.domain.model;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.mzh.grape.domain.constant.StateTypeEnum;
 import com.mzh.grape.domain.constant.TransitionTypeEnum;
@@ -56,6 +57,7 @@ public interface IStateMachine {
      */
     default IState advance(IState state, IEvent event) {
         Collection<ITransition> transitions = getTransition(state);
+        Assert.isTrue(CollectionUtil.isNotEmpty(transitions), "状态机推进失败: state[{}]在stateMachine[{}]中不存在对应transition", state.getStateId(), getStateMachineId());
         transitions = transitions
                 .stream()
                 .filter(transition -> transition.getCondition().isSatisfied(event))
@@ -67,7 +69,7 @@ public interface IStateMachine {
                 .collect(Collectors.toList());
 
         Assert.isTrue(externalTransitions.size() < 2,
-                "推进失败: stateMachine[%s], state[%s], event[%s], 符合状态事件条件的外部转换不能超过一个",
+                "推进失败: stateMachine[{}], state[{}], event[{}], 符合状态事件条件的外部转换不能超过一个",
                 getStateMachineId(), state.getStateId(), event.getEventId());
 
         List<ITransition> internalTransitions = transitions
@@ -77,11 +79,11 @@ public interface IStateMachine {
                 .collect(Collectors.toList());
 
         for (ITransition transition : internalTransitions) {
-            transition.transfer(state, event.getPayload());
+            transition.transfer(event.getPayload());
         }
 
         for (ITransition externalTransition : externalTransitions) {
-            state = externalTransition.transfer(state, event.getPayload());
+            state = externalTransition.transfer(event.getPayload());
         }
 
         if (StateTypeEnum.BRIDGE == state.getType()) {

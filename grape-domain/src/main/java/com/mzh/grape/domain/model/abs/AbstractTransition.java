@@ -26,6 +26,10 @@ public abstract class AbstractTransition implements ITransition {
 
     private IState stateTo;
 
+    private IState currentState;
+
+    private IState nextState;
+
     private ICondition condition;
 
     private IAction action;
@@ -42,6 +46,7 @@ public abstract class AbstractTransition implements ITransition {
     @Override
     public ITransition from(IState state) {
         this.stateFrom = state;
+        this.currentState = state;
 
         return this;
     }
@@ -49,6 +54,7 @@ public abstract class AbstractTransition implements ITransition {
     @Override
     public ITransition to(IState state) {
         this.stateTo = state;
+        this.nextState = state;
 
         return this;
     }
@@ -74,10 +80,4 @@ public abstract class AbstractTransition implements ITransition {
         return this;
     }
 
-    @Override
-    public IState getNextState() {
-
-        return this.stateTo;
-    }
-    
 }
