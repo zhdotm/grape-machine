@@ -1,6 +1,10 @@
 package com.mzh.grape.domain.model;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.mzh.grape.domain.annotation.Transition;
 import com.mzh.grape.domain.constant.TransitionTypeEnum;
 
 /**
@@ -65,6 +69,18 @@ public interface ITransition {
      * @return 转换ID
      */
     String getTransitionId();
+
+    /**
+     * 获取状态机ID
+     *
+     * @return 状态机ID
+     */
+    default String getStateMachineId() {
+        Class<? extends ITransition> clazz = this.getClass();
+        Transition transition = AnnotationUtil.getAnnotation(clazz, Transition.class);
+
+        return ObjectUtil.isNotEmpty(transition) ? transition.stateMachineId() : StrUtil.EMPTY;
+    }
 
     /**
      * 获取排序ID(从小到大)

@@ -41,11 +41,11 @@ public interface IStateMachineSupport {
     /**
      * 构建状态机
      *
-     * @param getStateMachineId      状态机ID
+     * @param stateMachineId         状态机ID
      * @param stateTransitionListMap 状态转换映射
      * @return 状态机
      */
-    default IStateMachine build(String getStateMachineId, Map<IState, List<ITransition>> stateTransitionListMap) {
+    default IStateMachine build(String stateMachineId, Map<IState, List<ITransition>> stateTransitionListMap) {
 
         List<IState> stateList = ListUtil.toList(stateTransitionListMap.keySet());
         Map<String, IState> stateIdStateMap = stateList
@@ -65,7 +65,7 @@ public interface IStateMachineSupport {
             @Override
             public String getStateMachineId() {
 
-                return getStateMachineId;
+                return stateMachineId;
             }
 
             @Override

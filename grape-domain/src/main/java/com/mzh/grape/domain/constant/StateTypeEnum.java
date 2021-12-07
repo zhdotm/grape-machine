@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 转换类型
+ * 状态类型
  *
  * @author zhihao.mao
  */
 
 @AllArgsConstructor
-public enum TransitionTypeEnum {
+public enum StateTypeEnum {
 
     /**
-     * 转换类型
+     * 状态类型
      */
-    INTERNAL("internal", "内部转换, 无状态转换"),
-    EXTERNAL("external", "外部转换, 有状态转换"),
+    NORMAL("normal", "普通状态类型, 仍处于一个状态机内"),
+    BRIDGE("bridge", "桥类型, 连接两个状态机"),
     ;
 
     /**

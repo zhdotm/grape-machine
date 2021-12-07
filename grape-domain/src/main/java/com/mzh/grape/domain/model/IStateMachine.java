@@ -1,6 +1,7 @@
 package com.mzh.grape.domain.model;
 
 import cn.hutool.core.lang.Assert;
+import com.mzh.grape.domain.constant.StateTypeEnum;
 import com.mzh.grape.domain.constant.TransitionTypeEnum;
 
 import java.util.Collection;
@@ -75,10 +76,30 @@ public interface IStateMachine {
                 .sorted(Comparator.comparingInt(ITransition::getSortId))
                 .collect(Collectors.toList());
 
-        internalTransitions.forEach(transition -> transition.transfer(state, event.getPayload()));
+        for (ITransition transition : internalTransitions) {
+            transition.transfer(state, event.getPayload());
+        }
 
         for (ITransition externalTransition : externalTransitions) {
-            return externalTransition.transfer(state, event.getPayload());
+            state = externalTransition.transfer(state, event.getPayload());
+        }
+
+        if (StateTypeEnum.BRIDGE == state.getType()) {
+
+            IState finalState = state;
+            return new IState() {
+                @Override
+                public String getStateId() {
+
+                    return finalState.getStateId();
+                }
+
+                @Override
+                public String getStateMachineId() {
+
+                    return finalState.getNextStateMachineId();
+                }
+            };
         }
 
         return state;
