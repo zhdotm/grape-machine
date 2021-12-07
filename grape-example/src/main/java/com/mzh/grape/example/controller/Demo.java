@@ -1,6 +1,7 @@
 package com.mzh.grape.example.controller;
 
 import com.mzh.grape.domain.model.IEvent;
+import com.mzh.grape.domain.model.IState;
 import com.mzh.grape.domain.model.IStateMachine;
 import com.mzh.grape.example.state.StartState;
 import com.mzh.grape.starter.spring.support.StateMachineSupport;
@@ -21,7 +22,7 @@ public class Demo {
     @GetMapping("/demo")
     public void test() {
         IStateMachine stateMachine = stateMachineSupport.getStateMachineById("状态机000001");
-        stateMachine.advance(new StartState(), new IEvent() {
+        IState state = stateMachine.advance(new StartState(), new IEvent() {
             @Override
             public String getEventId() {
                 return "start";
@@ -32,5 +33,6 @@ public class Demo {
                 return new Object[0];
             }
         });
+        System.out.println(state.getStateId());
     }
 }
