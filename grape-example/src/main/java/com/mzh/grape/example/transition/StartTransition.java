@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
         stateIdTo = "start0000001", type = TransitionTypeEnum.INTERNAL,
         sortId = 1, actionId = "startAction0000001",
         conditionId = "startCondition0001")
-public class Startransition extends AbstractTransition {
+public class StartTransition extends AbstractTransition {
 
     @Override
     public String getTransitionId() {
