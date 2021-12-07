@@ -79,27 +79,15 @@ public class AutoAssemblingRunner implements ApplicationRunner {
 
         Map<String, List<IState>> stateMachineIdStateListMap = stateList
                 .stream()
-                .collect(Collectors.groupingBy(iState -> {
-                    State state = AnnotationUtil.getAnnotation(iState.getClass(), State.class);
-
-                    return state.stateMachineId();
-                }));
+                .collect(Collectors.groupingBy(IState::getStateMachineId));
 
         Map<String, List<ICondition>> stateMachineIdConditionListMap = conditionList
                 .stream()
-                .collect(Collectors.groupingBy(iCondition -> {
-                    Condition condition = AnnotationUtil.getAnnotation(iCondition.getClass(), Condition.class);
-
-                    return condition.stateMachineId();
-                }));
+                .collect(Collectors.groupingBy(ICondition::getStateMachineId));
 
         Map<String, List<IAction>> stateMachineIdActionListMap = actionList
                 .stream()
-                .collect(Collectors.groupingBy(iAction -> {
-                    Action action = AnnotationUtil.getAnnotation(iAction.getClass(), Action.class);
-
-                    return action.stateMachineId();
-                }));
+                .collect(Collectors.groupingBy(IAction::getStateMachineId));
 
         Map<String, List<ITransition>> stateMachineIdTransitionListMap = transitionList
                 .stream()
