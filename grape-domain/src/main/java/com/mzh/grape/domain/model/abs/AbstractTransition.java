@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class AbstractTransition implements ITransition {
 
-    private TransitionTypeEnum transitionType;
+    private TransitionTypeEnum type;
 
     private IState stateFrom;
 
@@ -38,7 +38,7 @@ public abstract class AbstractTransition implements ITransition {
 
     @Override
     public ITransition type(TransitionTypeEnum transitionTypeEnum) {
-        this.transitionType = transitionTypeEnum;
+        this.type = transitionTypeEnum;
 
         return this;
     }

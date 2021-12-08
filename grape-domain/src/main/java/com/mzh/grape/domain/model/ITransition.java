@@ -94,7 +94,7 @@ public interface ITransition {
      *
      * @return 转换类型
      */
-    TransitionTypeEnum getTransitionType();
+    TransitionTypeEnum getType();
 
     /**
      * 获取条件
@@ -131,7 +131,7 @@ public interface ITransition {
      * @return 下个状态
      */
     default IState transfer(Object... args) {
-        TransitionTypeEnum transitionType = getTransitionType();
+        TransitionTypeEnum transitionType = getType();
         IAction action = getAction();
         Boolean invokeIsSuccess = action.invoke(args);
         Assert.isTrue(invokeIsSuccess, "transition[{}]执行失败: action[{}]执行失败", getTransitionId(), action.getActionId());

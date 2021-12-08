@@ -1,5 +1,7 @@
 package com.mzh.grape.domain.model;
 
+import com.mzh.grape.domain.constant.EventTypeEnum;
+
 /**
  * 事件
  *
@@ -7,6 +9,16 @@ package com.mzh.grape.domain.model;
  */
 
 public interface IEvent {
+
+    /**
+     * 获取事件类型(默认常规类型)
+     *
+     * @return 事件类型
+     */
+    default EventTypeEnum getType() {
+
+        return EventTypeEnum.NORMAL;
+    }
 
     /**
      * 获取事件ID

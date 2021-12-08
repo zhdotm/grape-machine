@@ -119,10 +119,10 @@ public interface IStateMachineSupport {
             return Boolean.FALSE;
         }
         Assert.isTrue(StrUtil.isNotBlank(transition.getTransitionId()), "检查转换完整性失败: 转换ID为空, transition[{}]", transition.toString());
-        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getTransitionType()), "检查转换完整性失败: 转换类型为空, transition[{}]", transition.toString());
+        Assert.isTrue(ObjectUtil.isNotEmpty(transition.getType()), "检查转换完整性失败: 转换类型为空, transition[{}]", transition.toString());
         Assert.isTrue(ObjectUtil.isNotEmpty(transition.getCondition()), "检查转换完整性失败: 转换条件为空, transition[{}]", transition.toString());
         Assert.isTrue(ObjectUtil.isNotEmpty(transition.getAction()), "检查转换完整性失败: 转换动作为空, transition[{}]", transition.toString());
-        Assert.isTrue(!(ObjectUtil.isEmpty(transition.getNextState()) && (TransitionTypeEnum.EXTERNAL == transition.getTransitionType())), "检查转换完整性失败: 外部转换类型不能没有下个转换状态, transition[{}]", transition.toString());
+        Assert.isTrue(!(ObjectUtil.isEmpty(transition.getNextState()) && (TransitionTypeEnum.EXTERNAL == transition.getType())), "检查转换完整性失败: 外部转换类型不能没有下个转换状态, transition[{}]", transition.toString());
         Assert.isTrue(ObjectUtil.isNotEmpty(transition.getSortId()), "检查转换完整性失败: 转换排序为空, transition[{}]", transition.toString());
 
         return Boolean.TRUE;

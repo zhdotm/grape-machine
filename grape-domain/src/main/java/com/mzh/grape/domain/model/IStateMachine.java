@@ -2,6 +2,7 @@ package com.mzh.grape.domain.model;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
+import com.mzh.grape.domain.constant.EventTypeEnum;
 import com.mzh.grape.domain.constant.StateTypeEnum;
 import com.mzh.grape.domain.constant.TransitionTypeEnum;
 
@@ -60,12 +61,12 @@ public interface IStateMachine {
         Assert.isTrue(CollectionUtil.isNotEmpty(transitions), "状态机推进失败: state[{}]在stateMachine[{}]中不存在对应transition", state.getStateId(), getStateMachineId());
         transitions = transitions
                 .stream()
-                .filter(transition -> transition.getCondition().isSatisfied(event))
+                .filter(transition -> (EventTypeEnum.NORMAL == event.getType() || event.getType().getValue().equalsIgnoreCase(transition.getType().getValue())) && transition.getCondition().isSatisfied(event))
                 .collect(Collectors.toList());
 
         List<ITransition> externalTransitions = transitions
                 .stream()
-                .filter(transition -> transition.getTransitionType() == TransitionTypeEnum.EXTERNAL)
+                .filter(transition -> transition.getType() == TransitionTypeEnum.EXTERNAL)
                 .collect(Collectors.toList());
 
         Assert.isTrue(externalTransitions.size() < 2,
@@ -74,7 +75,7 @@ public interface IStateMachine {
 
         List<ITransition> internalTransitions = transitions
                 .stream()
-                .filter(transition -> transition.getTransitionType() == TransitionTypeEnum.INTERNAL)
+                .filter(transition -> transition.getType() == TransitionTypeEnum.INTERNAL)
                 .sorted(Comparator.comparingInt(ITransition::getSortId))
                 .collect(Collectors.toList());
 
