@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Transition(stateMachineId = "状态机000001", stateIdFrom = "start0000001",
-        stateIdTo = "start0000001", type = TransitionTypeEnum.INTERNAL,
+        stateIdTo = "step0000002", type = TransitionTypeEnum.EXTERNAL,
         sortId = 1, actionId = "startAction0000001",
         conditionId = "startCondition0001")
 public class StartTransition extends AbstractTransition {
 
     @Override
     public String getTransitionId() {
-        
+
         return "start_transition_0001";
     }
 
