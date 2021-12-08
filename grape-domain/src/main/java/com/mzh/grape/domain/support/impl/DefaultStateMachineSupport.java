@@ -6,7 +6,6 @@ import com.mzh.grape.domain.model.IStateMachine;
 import com.mzh.grape.domain.support.IStateMachineSupport;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 默认状态机支持, 默认用hashmap缓存状态机信息
