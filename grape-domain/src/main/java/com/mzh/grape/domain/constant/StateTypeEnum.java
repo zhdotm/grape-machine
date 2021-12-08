@@ -23,12 +23,12 @@ public enum StateTypeEnum {
      * 代码
      */
     @Getter
-    private String value;
+    private final String value;
 
     /**
      * 描述
      */
     @Getter
-    private String description;
+    private final String description;
 
 }

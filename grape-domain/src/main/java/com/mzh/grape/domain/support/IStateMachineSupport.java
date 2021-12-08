@@ -1,6 +1,7 @@
 package com.mzh.grape.domain.support;
 
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
@@ -56,6 +57,9 @@ public interface IStateMachineSupport {
      * @return 状态机
      */
     default IStateMachine build(String stateMachineId, List<ITransition> allTransitionList) {
+        Assert.isTrue(StrUtil.isNotBlank(stateMachineId), "构建状态机失败: 状态机ID不能为空");
+        Assert.isTrue(CollectionUtil.isNotEmpty(allTransitionList), "构建状态机失败: 状态转换不能为空");
+        allTransitionList.forEach(this::checkTransition);
         Map<IState, List<ITransition>> stateTransitionListMap = allTransitionList.stream().collect(Collectors.groupingBy(ITransition::getCurrentState));
         Set<IState> stateSet = new HashSet<>(stateTransitionListMap.keySet());
         Set<String> stateIdSet = stateSet.stream().map(IState::getStateId).collect(Collectors.toSet());
@@ -73,14 +77,6 @@ public interface IStateMachineSupport {
         Map<String, IState> stateIdStateMap = stateList
                 .stream()
                 .collect(Collectors.toMap(IState::getStateId, iState -> iState));
-
-        stateTransitionListMap.forEach((iState, transitionList) -> {
-            transitionList = transitionList
-                    .stream()
-                    .filter(this::checkTransition)
-                    .collect(Collectors.toList());
-            stateTransitionListMap.put(iState, transitionList);
-        });
 
         return new IStateMachine() {
 
