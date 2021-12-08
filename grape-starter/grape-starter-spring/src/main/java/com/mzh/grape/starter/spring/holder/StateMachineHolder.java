@@ -22,15 +22,15 @@ import java.util.stream.Collectors;
 @Data
 public class StateMachineHolder {
 
-    public Map<String, IStateMachine> idStateMachineMap = MapUtil.newHashMap();
+    public Map<String, IStateMachine> idStateMachineMap = MapUtil.newConcurrentHashMap();
 
-    public Map<String, List<IAction>> stateMachineIdActionListMap = MapUtil.newHashMap();
+    public Map<String, List<IAction>> stateMachineIdActionListMap = MapUtil.newConcurrentHashMap();
 
-    public Map<String, List<ICondition>> stateMachineIdConditionListMap = MapUtil.newHashMap();
+    public Map<String, List<ICondition>> stateMachineIdConditionListMap = MapUtil.newConcurrentHashMap();
 
-    public Map<String, List<IState>> stateMachineIdStateListMap = MapUtil.newHashMap();
+    public Map<String, List<IState>> stateMachineIdStateListMap = MapUtil.newConcurrentHashMap();
 
-    public Map<String, List<ITransition>> stateMachineIdTransitionListMap = MapUtil.newHashMap();
+    public Map<String, List<ITransition>> stateMachineIdTransitionListMap = MapUtil.newConcurrentHashMap();
 
     public void put(String stateMachineId, IAction action) {
         List<IAction> actionList = stateMachineIdActionListMap.getOrDefault(stateMachineId, ListUtil.toList());

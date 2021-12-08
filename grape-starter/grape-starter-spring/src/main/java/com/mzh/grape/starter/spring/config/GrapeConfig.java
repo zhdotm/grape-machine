@@ -37,16 +37,16 @@ public class GrapeConfig {
 
     @Bean
     @ConditionalOnBean(StateMachineHolder.class)
-    public AutoAssemblingRunner autoAssemblingRunner() {
-
-        return new AutoAssemblingRunner();
-    }
-
-    @Bean
-    @ConditionalOnBean(StateMachineHolder.class)
     public StateMachineSupport stateMachineSupport() {
 
         return new StateMachineSupport();
+    }
+
+    @Bean
+    @ConditionalOnBean(StateMachineSupport.class)
+    public AutoAssemblingRunner autoAssemblingRunner() {
+
+        return new AutoAssemblingRunner();
     }
 
 }

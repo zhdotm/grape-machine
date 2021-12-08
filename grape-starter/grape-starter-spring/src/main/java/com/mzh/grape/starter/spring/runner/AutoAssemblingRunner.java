@@ -8,6 +8,7 @@ import com.mzh.grape.domain.annotation.State;
 import com.mzh.grape.domain.annotation.Transition;
 import com.mzh.grape.domain.model.*;
 import com.mzh.grape.starter.spring.holder.StateMachineHolder;
+import com.mzh.grape.starter.spring.support.StateMachineSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -31,6 +32,9 @@ public class AutoAssemblingRunner implements ApplicationRunner {
 
     @Autowired
     private StateMachineHolder stateMachineHolder;
+
+    @Autowired
+    private StateMachineSupport stateMachineSupport;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
@@ -125,44 +129,11 @@ public class AutoAssemblingRunner implements ApplicationRunner {
                     return stateMachineId;
                 }));
 
-        stateMachineIdStateListMap
-                .forEach((stateMachineId, iStates) -> {
-                    IStateMachine abstractStateMachine = new IStateMachine() {
-                        @Override
-                        public String getStateMachineId() {
-                            return stateMachineId;
-                        }
-
-                        @Override
-                        public Collection<IState> getStates() {
-                            return iStates;
-                        }
-
-                        @Override
-                        public IState getStateById(String stateId) {
-
-                            return iStates
-                                    .stream()
-                                    .filter(iState -> iState.getStateId().equalsIgnoreCase(stateId))
-                                    .findFirst()
-                                    .orElse(null);
-                        }
-
-                        @Override
-                        public Collection<ITransition> getTransition(IState state) {
-                            List<ITransition> iTransitions = stateMachineIdTransitionListMap.get(stateMachineId);
-
-                            return iTransitions.stream().filter(iTransition -> {
-                                Transition transition = AnnotationUtil.getAnnotation(iTransition.getClass(), Transition.class);
-                                return transition.stateIdFrom().equalsIgnoreCase(state.getStateId());
-                            }).collect(Collectors.toList());
-                        }
-                    };
-
-                    stateMachineHolder.put(abstractStateMachine, Boolean.FALSE);
-                    SpringUtil.registerBean(stateMachineId, abstractStateMachine);
-                    log.info("组装状态机成功: {}", stateMachineId);
-                });
+        stateMachineIdTransitionListMap.forEach((stateMachineId, transitionListTemp) -> {
+            IStateMachine stateMachine = stateMachineSupport.build(stateMachineId, transitionList);
+            //组件均已注册缓存, 不需要再次缓存
+            stateMachineHolder.put(stateMachine, Boolean.FALSE);
+        });
         log.info("全部状态机组装完毕");
     }
 
