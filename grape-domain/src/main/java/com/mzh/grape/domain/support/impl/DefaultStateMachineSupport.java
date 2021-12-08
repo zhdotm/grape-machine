@@ -1,5 +1,6 @@
 package com.mzh.grape.domain.support.impl;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.mzh.grape.domain.model.IStateMachine;
 import com.mzh.grape.domain.support.IStateMachineSupport;
@@ -15,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultStateMachineSupport implements IStateMachineSupport {
 
-    private final Map<String, IStateMachine> idStateMachineMap = new ConcurrentHashMap<>();
+    private final Map<String, IStateMachine> idStateMachineMap = MapUtil.newConcurrentHashMap();
 
     private static volatile DefaultStateMachineSupport stateMachineSupport;
 
