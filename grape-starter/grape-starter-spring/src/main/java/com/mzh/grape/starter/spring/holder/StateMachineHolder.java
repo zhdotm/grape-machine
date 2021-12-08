@@ -19,10 +19,9 @@ import java.util.stream.Collectors;
  */
 
 @Slf4j
-@Data
 public class StateMachineHolder {
 
-    public Map<String, IStateMachine> idStateMachineMap = MapUtil.newConcurrentHashMap();
+    public Map<String, IStateMachine> stateMachineIdStateMachineMap = MapUtil.newConcurrentHashMap();
 
     public Map<String, List<IAction>> stateMachineIdActionListMap = MapUtil.newConcurrentHashMap();
 
@@ -104,7 +103,7 @@ public class StateMachineHolder {
      */
     public void put(IStateMachine stateMachine, Boolean isNeedRegisterStateMachineComponent) {
         String stateMachineId = stateMachine.getStateMachineId();
-        if (idStateMachineMap.containsKey(stateMachineId)) {
+        if (stateMachineIdStateMachineMap.containsKey(stateMachineId)) {
             log.warn("添加状态机失败: 已存在状态机[{}]", stateMachineId);
 
             return;
@@ -135,7 +134,7 @@ public class StateMachineHolder {
         }
 
         //添加状态机
-        idStateMachineMap.put(stateMachineId, stateMachine);
+        stateMachineIdStateMachineMap.put(stateMachineId, stateMachine);
 
         log.info("添加状态机: {}", stateMachine.getStateMachineId());
     }
@@ -147,7 +146,7 @@ public class StateMachineHolder {
      */
     public void remove(String stateMachineId) {
 
-        idStateMachineMap.remove(stateMachineId);
+        stateMachineIdStateMachineMap.remove(stateMachineId);
         stateMachineIdActionListMap.remove(stateMachineId);
         stateMachineIdConditionListMap.remove(stateMachineId);
         stateMachineIdStateListMap.remove(stateMachineId);
@@ -163,7 +162,7 @@ public class StateMachineHolder {
      */
     public IStateMachine get(String stateMachineId) {
 
-        return idStateMachineMap.get(stateMachineId);
+        return stateMachineIdStateMachineMap.get(stateMachineId);
     }
 
 }

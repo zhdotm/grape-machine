@@ -2,6 +2,7 @@ package com.mzh.grape.starter.spring.config;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.mzh.grape.starter.spring.holder.StateMachineHolder;
+import com.mzh.grape.starter.spring.listener.StateMachineInternalEventListener;
 import com.mzh.grape.starter.spring.processor.StateMachineProcessor;
 import com.mzh.grape.starter.spring.runner.AutoAssemblingRunner;
 import com.mzh.grape.starter.spring.support.StateMachineSupport;
@@ -47,6 +48,13 @@ public class GrapeConfig {
     public AutoAssemblingRunner autoAssemblingRunner() {
 
         return new AutoAssemblingRunner();
+    }
+
+    @Bean
+    @ConditionalOnBean(StateMachineHolder.class)
+    public StateMachineInternalEventListener stateMachineListener() {
+
+        return new StateMachineInternalEventListener();
     }
 
 }
