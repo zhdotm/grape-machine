@@ -112,7 +112,6 @@ public interface IStateMachineSupport {
      * 检查转换的完整性
      *
      * @param transition 转换
-     * @return 是否完整
      */
     default void checkTransition(ITransition transition) {
         if (ObjectUtil.isEmpty(transition)) {
