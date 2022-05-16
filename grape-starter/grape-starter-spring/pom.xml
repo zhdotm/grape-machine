@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>grape-starter</artifactId>
-        <groupId>com.mzh</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>io.github.zhdotm</groupId>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.mzh</groupId>
+            <groupId>io.github.zhdotm</groupId>
             <artifactId>grape-domain</artifactId>
             <version>${project.version}</version>
         </dependency>
