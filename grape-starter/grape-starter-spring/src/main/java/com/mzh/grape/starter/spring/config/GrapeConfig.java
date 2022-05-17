@@ -31,6 +31,7 @@ public class GrapeConfig {
     }
 
     @Bean
+    @ConditionalOnBean(StateMachineHolder.class)
     public StateMachineProcessor stateMachineProcessor() {
 
         return new StateMachineProcessor();
