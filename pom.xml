@@ -7,6 +7,14 @@
     <groupId>io.github.zhdotm</groupId>
     <artifactId>grape-machine</artifactId>
     <version>1.0.2</version>
+    <name>grape-machine</name>
+    <url>https://github.com/zhdotm/grape-machine</url>
+    <developers>
+        <developer>
+            <name>zhihao.mao</name>
+        </developer>
+    </developers>
+
     <modules>
         <module>grape-domain</module>
         <module>grape-starter</module>
